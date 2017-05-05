@@ -1,0 +1,75 @@
+﻿<Window x:Class="ImageInfoViewer.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:cm="clr-namespace:System.ComponentModel;assembly=System"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Image Info Viewer" Height="648.424" Width="873" ResizeMode="CanMinimize">
+    <Window.Resources>
+        <cm:BackgroundWorker x:Key="backgroundWorker" WorkerReportsProgress="True" ProgressChanged="ProgressChanged" DoWork="DoWork" RunWorkerCompleted="WorkDone"/>
+        <cm:BackgroundWorker x:Key="backgroundWorker2" WorkerReportsProgress="True" DoWork="DoWork2" RunWorkerCompleted="WorkDone2"/>
+    </Window.Resources>
+    <Grid>
+        <DataGrid x:Name="ImageGrid" Margin="10,10,321,0" VerticalAlignment="Top" Height="242" GridLinesVisibility="All" AutoGenerateColumns="False" MouseUp="clickRow">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="№" Binding="{Binding Path=Number}" IsReadOnly="True" Width="25" MinWidth="25">
+                    <DataGridTextColumn.HeaderStyle>
+                        <Style TargetType="DataGridColumnHeader">
+                            <Setter Property="HorizontalContentAlignment" Value="Center" />
+                        </Style>
+                    </DataGridTextColumn.HeaderStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Имя файла" Binding="{Binding Path=Name}" IsReadOnly="True" Width="410" MaxWidth="410" MinWidth="410">
+                    <DataGridTextColumn.HeaderStyle>
+                        <Style TargetType="DataGridColumnHeader">
+                            <Setter Property="HorizontalContentAlignment" Value="Center" />
+                        </Style>
+                    </DataGridTextColumn.HeaderStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Формат" Binding="{Binding Path=Format}" IsReadOnly="True" Width="100" MinWidth="100" MaxWidth="100">
+                    <DataGridTextColumn.HeaderStyle>
+                        <Style TargetType="DataGridColumnHeader">
+                            <Setter Property="HorizontalContentAlignment" Value="Center" />
+                        </Style>
+                    </DataGridTextColumn.HeaderStyle>
+                </DataGridTextColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+        <Grid HorizontalAlignment="Left" Height="353" Margin="10,257,0,0" VerticalAlignment="Top" Width="724">
+            <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="233" Margin="10,43,0,0" VerticalAlignment="Top" Width="348">
+                <Image x:Name="image1" HorizontalAlignment="Left" Height="233" Margin="9,-1,0,-1" VerticalAlignment="Top" Width="328"/>
+            </Border>
+            <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="233" Margin="363,43,0,0" VerticalAlignment="Top" Width="351">
+                <Canvas x:Name="canvas" HorizontalAlignment="Left" Height="233" Margin="9,-1,0,-1" VerticalAlignment="Top" Width="331"/>
+            </Border>
+            <Label Content="Изображение" HorizontalAlignment="Left" Margin="135,10,0,0" VerticalAlignment="Top" Width="139"/>
+            <Label Content="Гистограмма" HorizontalAlignment="Left" Margin="496,10,0,0" VerticalAlignment="Top" Width="134"/>
+            <ProgressBar x:Name="StateBar" Value="0" Maximum="100" Margin="10,325,597,10"/>
+            <StatusBarItem Margin="10,281,366,39">
+                <TextBlock x:Name="ProcessLabel" Text="Begin work!" FontSize="10" Height="15"/>
+            </StatusBarItem>
+            <ProgressBar x:Name="progress" HorizontalAlignment="Left" Height="17" Margin="363,281,0,0" VerticalAlignment="Top" Width="351"/>
+        </Grid>
+        <Grid HorizontalAlignment="Left" Height="242" Margin="551,10,0,0" VerticalAlignment="Top" Width="306">
+            <Button x:Name="open" Content="Открыть" Margin="10,21,193,197" Click="Button_Click"/>
+            <Button x:Name="Clear_Button" Content="Очистить список" Margin="10,50,193,168"  Click="ClearButton_Click"/>
+            <Button x:Name="equalization" Content="Эквализация" HorizontalAlignment="Left" Margin="10,106,0,0" VerticalAlignment="Top" Width="103" Height="24" Click="Button_Click_1"/>
+            <CheckBox x:Name="smooth" Content="Сглаживание" HorizontalAlignment="Left" Margin="10,157,0,0" VerticalAlignment="Top" Click="click"/>
+            <Grid x:Name="grid" HorizontalAlignment="Left" Height="222" Margin="146,11,0,0" VerticalAlignment="Top" Width="150">
+                <Button x:Name="sharp" Content="Резкость" HorizontalAlignment="Left" Margin="8,10,0,0" VerticalAlignment="Top" Width="103" Click="sharp_Click" Height="24"/>
+                <Label x:Name="matrix" Content="Матрица" HorizontalAlignment="Left" Margin="28,80,0,0" VerticalAlignment="Top" Height="28"/>
+                <RadioButton x:Name="r1" Content="LoG" HorizontalAlignment="Left" Margin="11,39,0,0" VerticalAlignment="Top" Checked="r1_Checked"/>
+                <RadioButton x:Name="r2" Content="Другой" HorizontalAlignment="Left" Margin="11,60,0,0" VerticalAlignment="Top" Checked="r2_Checked"/>
+                <Grid x:Name="matr" HorizontalAlignment="Left" Height="79" Margin="11,108,0,0" VerticalAlignment="Top" Width="100">
+                    <TextBox x:Name="t00" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Width="30" Text="-1"/>
+                    <TextBox x:Name="t01" HorizontalAlignment="Left" Height="23" Margin="30,0,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="30" Text="-1"/>
+                    <TextBox x:Name="t02" HorizontalAlignment="Left" Height="23" Margin="60,0,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="30" Text="-1"/>
+                    <TextBox x:Name="t10" HorizontalAlignment="Left" Height="23" Margin="0,23,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="30" Text="-1"/>
+                    <TextBox x:Name="t11" HorizontalAlignment="Left" Height="23" Margin="30,23,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="30" Text="9"/>
+                    <TextBox x:Name="t12" HorizontalAlignment="Left" Height="23" Margin="60,23,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="30" Text="-1"/>
+                    <TextBox x:Name="t20" HorizontalAlignment="Left" Height="23" Margin="0,46,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="30" Text="-1"/>
+                    <TextBox x:Name="t21" Height="23" Margin="30,46,40,0" TextWrapping="Wrap" VerticalAlignment="Top" Text="-1"/>
+                    <TextBox x:Name="t22" HorizontalAlignment="Left" Height="23" Margin="60,46,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="30" Text="-1"/>
+                </Grid>
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>
